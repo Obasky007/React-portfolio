@@ -49,7 +49,7 @@ const Shop = () => {
         name: "",
         desc: "",
         price: "",
-          img: null,
+        img: null,
       });
       setErrors({});
     }
@@ -68,7 +68,7 @@ const Shop = () => {
           {showForm && (
             <form
               onSubmit={handleSubmit}
-              className="glass-nav w-fit m-auto p-10"
+              className="glass-nav w-full sm:w-fit m-auto p-6 sm:p-10 mx-4"
             >
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col">
@@ -137,9 +137,9 @@ const Shop = () => {
             </form>
           )}
           {products.length > 0 ? (
-            <div className="flex flex-row flex-wrap m-auto mb-5 ml-3">
+            <div className="flex flex-row flex-wrap m-auto mb-5 px-3">
               {products.map((product, id) => (
-                <div className="w-[23%] glass-nav mx-3 my-3 p-3 rounded-md">
+                <div className="w-full sm:w-[calc(50%-12px)] md:w-[calc(33%-12px)] lg:w-[23%] glass-nav mx-1.5 sm:mx-3 my-3 p-3 rounded-md">
                   <img
                     src={product.img}
                     className="w-[100%] h-[200px] rounded-t-md hover:skew-x-1 transition-all object-cover"
@@ -153,7 +153,7 @@ const Shop = () => {
               ))}
             </div>
           ) : (
-            <div className="mt-5 glass-nav shadow-none font-bold text-4xl w-[500px] m-auto items-center p-10">
+            <div className="mt-5 glass-nav shadow-none font-bold text-2xl sm:text-4xl w-full sm:w-[500px] m-auto items-center p-6 sm:p-10 mx-4">
               <h1 className="w-full">Oops, Your Cart Is Empty</h1>
             </div>
           )}

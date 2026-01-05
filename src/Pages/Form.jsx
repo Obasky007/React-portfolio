@@ -41,10 +41,20 @@ const Form = () => {
   };
   return (
     <>
-      <div className="min-h-screen text-gray-800">
+      <div
+        className="relative min-h-screen text-gray-900 bg-white"
+        style={{
+          backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 28px),
+          repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 28px),
+          radial-gradient(circle at center, rgba(0,0,0,0.03), transparent 50%)
+        `,
+        }}
+      >
+        {" "}
         <Header />
-        <div className="pt-[120px] ">
-          <div className="glass-nav w-[450px] md:max-w-3xl mx-auto shadow-xl">
+        <div className="pt-[120px] px-4">
+          <div className="glass-nav w-full sm:w-[450px] md:max-w-3xl mx-auto shadow-xl">
             <form
               onSubmit={handleSubmit}
               className="flex flex-col gap-5  px-8 pb-8 rounded-xl"

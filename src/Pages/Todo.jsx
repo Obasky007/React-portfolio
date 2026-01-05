@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
+import { TbMoodBoy } from "react-icons/tb";
 
 const Todo = () => {
   const [tasks, setTasks] = useState([]);
   const [taskName, setTaskName] = useState("");
 
   const addTask = () => {
-    if (!taskName.trim()) return; 
+    if (!taskName.trim()) return;
     setTasks([...tasks, taskName]);
     setTaskName("");
   };
@@ -25,10 +26,19 @@ const Todo = () => {
   };
 
   return (
-    <div className="min-h-screen text-gray-900">
+    <div
+      className="relative min-h-screen text-gray-900 bg-white"
+      style={{
+        backgroundImage: `
+          repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 28px),
+          repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 28px),
+          radial-gradient(circle at center, rgba(0,0,0,0.03), transparent 50%)
+        `,
+      }}
+    >
       <Header />
-      <div className="pt-32">
-        <div className="glass-nav w-[450px] md:max-w-3xl mx-auto pt-6 p-8 rounded-2xl shadow-xl">
+      <div className="pt-32 px-4">
+        <div className="bg-white w-full sm:w-[450px] md:max-w-3xl mx-auto pt-6 p-6 sm:p-8 rounded-2xl shadow-xl">
           <h1 className="text-3xl font-bold mb-6 text-center">To-Do List</h1>
 
           <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -56,7 +66,6 @@ const Todo = () => {
                   <th className="py-2 px-3 text-sm md:text-base">Actions</th>
                 </tr>
               </thead>
-
               <tbody>
                 {tasks.map((task, index) => (
                   <tr
