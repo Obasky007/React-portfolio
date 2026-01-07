@@ -68,7 +68,7 @@ const Shop = () => {
           {showForm && (
             <form
               onSubmit={handleSubmit}
-              className="glass-nav w-full sm:w-fit m-auto p-6 sm:p-10 mx-4"
+              className="glass-nav w-full sm:w-[500px] max-w-md mx-auto my-6 p-6 sm:p-10"
             >
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col">

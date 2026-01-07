@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Header from "../Components/Header";
 import { TbMoodBoy } from "react-icons/tb";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { IoMdAdd } from "react-icons/io";
 
 const Todo = () => {
   const [tasks, setTasks] = useState([]);
@@ -16,6 +18,12 @@ const Todo = () => {
     if (confirm(`Are you sure you want to delete task ${pos + 1}?`)) {
       const newList = tasks.filter((_, index) => index !== pos);
       setTasks(newList);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      addTask();
     }
   };
 
@@ -47,19 +55,21 @@ const Todo = () => {
               placeholder="Enter a new task..."
               value={taskName}
               onChange={(e) => setTaskName(e.target.value)}
+              onKeyPress={handleKeyPress}
               className="flex-1 px-4 py-2 rounded-lg border border-black backdrop-blur-sm bg-white/10 text-black placeholder-black"
             />
             <button
               onClick={addTask}
-              className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition"
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition flex items-center gap-2"
             >
+              <IoMdAdd size={20} />
               Add
             </button>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="max-h-[300px] overflow-y-auto rounded-lg border border-gray-200">
             <table className="w-full table-auto text-left border-collapse">
-              <thead className="bg-gray-300 rounded-t-2xl backdrop-blur-md border-t-2 border-black">
+              <thead className="bg-gray-300 sticky top-0 backdrop-blur-md border-b-2 border-black">
                 <tr>
                   <th className="py-2 px-3 text-sm md:text-base">S/N</th>
                   <th className="py-2 px-3 text-sm md:text-base">Task</th>
@@ -77,15 +87,17 @@ const Todo = () => {
                     <td className="py-2 px-3 flex gap-2">
                       <button
                         onClick={() => editTask(index)}
-                        className="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded transition"
+                        className="p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded transition"
+                        title="Edit task"
                       >
-                        Edit
+                        <FiEdit2 size={18} />
                       </button>
                       <button
                         onClick={() => deleteTask(index)}
-                        className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded transition"
+                        className="p-2 bg-red-500 hover:bg-red-600 text-white rounded transition"
+                        title="Delete task"
                       >
-                        Delete
+                        <FiTrash2 size={18} />
                       </button>
                     </td>
                   </tr>
