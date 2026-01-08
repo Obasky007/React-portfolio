@@ -4,162 +4,178 @@ import Header from "../Components/Header";
 const Shop = () => {
   const [showForm, setShowForm] = useState(false);
   const [products, setProducts] = useState([]);
+  const [errors, setErrors] = useState({});
+
   const [form, setForm] = useState({
     name: "",
     desc: "",
     price: "",
     img: null,
   });
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: [e.target.value] });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
-  const [errors, setErrors] = useState({});
-  const validate = () => {
-    const addError = {};
-    if (!form.name) {
-      addError.nameError = "Product Name is Required";
-    }
-    if (!form.price) {
-      addError.priceError = "Price is Required";
-    }
-    if (!form.desc) {
-      addError.descError = "Add a description";
-    }
-    if (form.img === null) {
-      addError.imgError = "Add a Image";
-    }
-    return addError;
-  };
+
   const handleImageChange = (e) => {
-    const allImages = e.target.files;
-    const [one] = allImages;
-    const imageDir = URL.createObjectURL(one);
-    console.log(imageDir);
-    setForm({ ...form, [e.target.name]: imageDir });
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setForm({ ...form, img: imageUrl });
   };
+
+  const validate = () => {
+    const newErrors = {};
+
+    if (!form.name.trim()) newErrors.nameError = "Product Name is required";
+    if (form.price === "" || Number(form.price) <= 0)
+      newErrors.priceError = "Enter a valid price";
+    if (!form.desc.trim()) newErrors.descError = "Description is required";
+    if (!form.img) newErrors.imgError = "Product image is required";
+
+    return newErrors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const check = validate();
 
-    if (Object.keys(check).length > 0) {
-      setErrors(check);
-    } else {
-      setProducts([...products, form]);
-      setForm({
-        name: "",
-        desc: "",
-        price: "",
-        img: null,
-      });
-      setErrors({});
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
     }
+
+    setProducts([
+      ...products,
+      {
+        ...form,
+        price: Number(form.price),
+      },
+    ]);
+
+    setForm({
+      name: "",
+      desc: "",
+      price: "",
+      img: null,
+    });
+
+    setErrors({});
+    setShowForm(false);
   };
+
   return (
-    <>
-      <div className="min-h-screen text-gray-900">
-        <Header />
-        <div className="pt-[87px]">
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="ml-4 flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+    <div className="min-h-screen text-gray-900">
+      <Header />
+
+      <div className="pt-[87px]">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="ml-4 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
+        >
+          {showForm ? "Close" : "Add product"}
+        </button>
+
+        {showForm && (
+          <form
+            onSubmit={handleSubmit}
+            className="glass-nav w-full sm:w-[500px] max-w-md mx-auto my-6 p-6 sm:p-10"
           >
-            {showForm ? "Close" : "Add product"}
-          </button>
-          {showForm && (
-            <form
-              onSubmit={handleSubmit}
-              className="glass-nav w-full sm:w-[500px] max-w-md mx-auto my-6 p-6 sm:p-10"
-            >
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col">
-                  <label>Product Name:</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    className="border-b pl-4 border-black bg-transparent focus:outline-none"
-                  />
-                  <span className="text-red-600 items-center">
-                    {errors.nameError}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <label>Product Price:</label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={form.price}
-                    onChange={handleChange}
-                    className="border-b pl-4 border-black bg-transparent focus:outline-none"
-                  />
-                  <span className="text-red-600 items-center">
-                    {errors.priceError}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <label>Product Image:</label>
-                  <input
-                    type="file"
-                    name="img"
-                    onChange={handleImageChange}
-                    className=""
-                  />
-                  <span className="text-red-600 items-center">
-                    {errors.imgError}
-                  </span>
-                </div>
-                <div className="flex flex-col">
-                  <label>Description:</label>
-                  <textarea
-                    name="desc"
-                    id="20"
-                    value={form.desc}
-                    onChange={handleChange}
-                    className="border pl-4 border-black bg-transparent focus:outline-none"
-                  ></textarea>
-                  <span className="text-red-600 items-center">
-                    {errors.descError}
-                  </span>
-                </div>
-                <div className="flex justify-center items-center gap-16">
-                  <button
-                    onClick={() => setShowForm(!showForm)}
-                    className="ml-4 flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700"
-                  >
-                    Close
-                  </button>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
-                    ADD
-                  </button>
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  className="border-b pl-4 border-black bg-transparent focus:outline-none"
+                />
+                <span className="text-red-600">{errors.nameError}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <label>Product Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={form.price}
+                  onChange={handleChange}
+                  className="border-b pl-4 border-black bg-transparent focus:outline-none"
+                />
+                <span className="text-red-600">{errors.priceError}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <label>Product Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                <span className="text-red-600">{errors.imgError}</span>
+              </div>
+
+              <div className="flex flex-col">
+                <label>Description</label>
+                <textarea
+                  name="desc"
+                  value={form.desc}
+                  onChange={handleChange}
+                  className="border pl-4 border-black bg-transparent focus:outline-none"
+                />
+                <span className="text-red-600">{errors.descError}</span>
+              </div>
+
+              <div className="flex justify-center gap-10">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="px-4 py-2 bg-gray-700 text-white rounded-lg"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-800"
+                >
+                  ADD
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {products.length > 0 ? (
+          <div className="flex flex-wrap px-3">
+            {products.map((product, index) => (
+              <div
+                key={index}
+                className="w-full sm:w-[48%] md:w-[31%] lg:w-[23%] glass-nav mx-2 my-3 p-3 rounded-md"
+              >
+                <img
+                  src={product.img}
+                  alt={product.name}
+                  className="w-full h-[200px] object-cover rounded-md"
+                />
+                <div className="p-4">
+                  <h2 className="font-bold text-lg">{product.name}</h2>
+                  <p className="text-sm">{product.desc}</p>
+                  <p className="font-semibold mt-2">₦{product.price}</p>
                 </div>
               </div>
-            </form>
-          )}
-          {products.length > 0 ? (
-            <div className="flex flex-row flex-wrap m-auto mb-5 px-3">
-              {products.map((product, id) => (
-                <div className="w-full sm:w-[calc(50%-12px)] md:w-[calc(33%-12px)] lg:w-[23%] glass-nav mx-1.5 sm:mx-3 my-3 p-3 rounded-md">
-                  <img
-                    src={product.img}
-                    className="w-[100%] h-[200px] rounded-t-md hover:skew-x-1 transition-all object-cover"
-                  />
-                  <div className="p-10">
-                    <h2 className="font-bold">{product.name}</h2>
-                    <p>{product.desc}</p>
-                    <p className="font-semibold">{product.price}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-5 glass-nav shadow-none font-bold text-2xl sm:text-4xl w-full sm:w-[500px] m-auto items-center p-6 sm:p-10 mx-4">
-              <h1 className="w-full">Oops, Your Cart Is Empty</h1>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-5 text-center font-bold text-2xl glass-nav p-6 mx-4">
+            Oops, Your Cart Is Empty
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
