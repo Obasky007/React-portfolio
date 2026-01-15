@@ -40,7 +40,7 @@ const Header = () => {
               to="/form"
               className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 inline-block cursor-pointer transition"
             >
-              Hire Me
+              Hire <span className="hidden md:inline">Me</span>
             </Link>
           </nav>
         </div>
